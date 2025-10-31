@@ -1,7 +1,6 @@
-
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 
 export async function GET(request: Request) {
   try {
