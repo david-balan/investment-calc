@@ -6,7 +6,14 @@ export const authConfig = {
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      return true;
+      const isLoggedIn = !!auth?.user;
+      const isOnCalculator = nextUrl.pathname === '/';
+      
+      if (isOnCalculator) {
+        return true; // Allow everyone to access calculator page
+      }
+      
+      return isLoggedIn;
     },
   },
   providers: [],
