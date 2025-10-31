@@ -120,5 +120,3 @@ export default function Home() {
     </main>
   );
 }
-
-daduaduiw
