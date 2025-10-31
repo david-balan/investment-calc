@@ -1,24 +1,15 @@
 import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
-import { authConfig } from './auth.config';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  ...authConfig,
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      authorization: {
-        params: {
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code"
-        }
-      }
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
       }
@@ -30,11 +21,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return session;
     },
-    async redirect({ url, baseUrl }) {
-      // Always redirect to home page after sign in
-      return baseUrl;
-    },
   },
+  pages: {
+    signIn: '/',
+  },
+  debug: process.env.NODE_ENV === 'development',
+  trustHost: true,
 });
 
 export const { GET, POST } = handlers;
