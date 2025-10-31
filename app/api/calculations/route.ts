@@ -1,15 +1,15 @@
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
-import { auth } from '@/app/lib/auth';
+import { auth } from '@/auth';
 
-export async function GET(request: Request) {
+export async function GET() {
+  const session = await auth();
+  
+  if (!session?.user?.email) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
-    const session = await auth();
-    
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const { rows } = await sql`
       SELECT * FROM calculations 
       WHERE user_id = ${session.user.email}
@@ -24,13 +24,13 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  try {
-    const session = await auth();
-    
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+  const session = await auth();
+  
+  if (!session?.user?.email) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
+  try {
     const body = await request.json();
     const { type, parameters, results } = body;
 
