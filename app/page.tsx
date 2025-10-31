@@ -1,15 +1,13 @@
-// ==========================================
-// FILE: app/page.tsx
-// ==========================================
-// Replace your entire app/page.tsx with this code
 
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession, signIn, signOut } from 'next-auth/react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { DollarSign, TrendingUp, PiggyBank, Save, History } from 'lucide-react';
+import { DollarSign, TrendingUp, PiggyBank, Save, History, LogOut, LogIn } from 'lucide-react';
 
 export default function Home() {
+  const { data: session, status } = useSession();
   const [activeTab, setActiveTab] = useState('stocks');
   const [savedCalculations, setSavedCalculations] = useState<any[]>([]);
   const [showHistory, setShowHistory] = useState(false);
@@ -29,8 +27,10 @@ export default function Home() {
   const [currentAge, setCurrentAge] = useState(35);
 
   useEffect(() => {
-    fetchCalculations();
-  }, []);
+    if (session) {
+      fetchCalculations();
+    }
+  }, [session]);
 
   const fetchCalculations = async () => {
     try {
@@ -45,6 +45,11 @@ export default function Home() {
   };
 
   const saveCalculation = async () => {
+    if (!session) {
+      alert('Please sign in to save calculations!');
+      return;
+    }
+
     setSaving(true);
     const calculation = {
       type: activeTab,
@@ -67,7 +72,7 @@ export default function Home() {
 
       if (response.ok) {
         await fetchCalculations();
-        alert('✅ Calculation saved to database successfully!');
+        alert('✅ Calculation saved to your account!');
       } else {
         alert('❌ Failed to save calculation');
       }
@@ -145,18 +150,83 @@ export default function Home() {
     }).format(value);
   };
 
+  // Loading state
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center">
+        <div className="text-white text-2xl">Loading...</div>
+      </div>
+    );
+  }
+
+  // Not signed in
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-6">
+        <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-md text-center">
+          <div className="mb-8">
+            <DollarSign className="mx-auto text-blue-600 mb-4" size={80} />
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              Investment Calculator
+            </h1>
+            <p className="text-lg text-gray-600">
+              Plan your financial future with compound interest projections
+            </p>
+          </div>
+          
+          <button
+            onClick={() => signIn('google')}
+            className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 shadow-xl"
+          >
+            <LogIn size={24} />
+            Sign in with Google
+          </button>
+
+          <p className="text-sm text-gray-500 mt-6">
+            Sign in to save your calculations and access them anywhere
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Signed in - show calculator
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-6">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-5xl font-bold text-white mb-3 drop-shadow-lg">
-            Investment & Retirement Calculator
-          </h1>
-          <p className="text-blue-200 text-lg">Plan your financial future with compound interest projections</p>
+        {/* Header with User Info */}
+        <div className="flex justify-between items-center mb-8">
+          <div className="text-center flex-1">
+            <h1 className="text-5xl font-bold text-white mb-3 drop-shadow-lg">
+              Investment & Retirement Calculator
+            </h1>
+            <p className="text-blue-200 text-lg">Plan your financial future with compound interest projections</p>
+          </div>
+          
+          {/* User Profile */}
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 flex items-center gap-4">
+            {session.user?.image && (
+              <img 
+                src={session.user.image} 
+                alt="Profile" 
+                className="w-12 h-12 rounded-full border-2 border-white"
+              />
+            )}
+            <div className="text-white">
+              <p className="font-semibold">{session.user?.name}</p>
+              <p className="text-sm text-blue-200">{session.user?.email}</p>
+            </div>
+            <button
+              onClick={() => signOut()}
+              className="ml-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-all"
+            >
+              <LogOut size={18} />
+              Sign Out
+            </button>
+          </div>
         </div>
 
-        {/* Tab Navigation - FIXED */}
+        {/* Tab Navigation */}
         <div className="flex gap-4 mb-8 justify-center flex-wrap">
           <button
             onClick={() => setActiveTab('stocks')}
@@ -185,16 +255,16 @@ export default function Home() {
             className="px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white hover:from-emerald-600 hover:to-emerald-700 transition-all transform hover:scale-105 shadow-xl"
           >
             <History size={24} />
-            History ({savedCalculations.length})
+            My History ({savedCalculations.length})
           </button>
         </div>
 
-        {/* History Panel - FIXED */}
+        {/* History Panel */}
         {showHistory && (
           <div className="bg-white rounded-2xl shadow-2xl p-8 mb-8 border-4 border-emerald-500">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
               <History className="text-emerald-600" size={32} />
-              Saved Calculations
+              My Saved Calculations
             </h2>
             {savedCalculations.length === 0 ? (
               <div className="text-center py-12">
@@ -232,7 +302,7 @@ export default function Home() {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Input Panel - IMPROVED UI */}
+          {/* Input Panel */}
           <div className="bg-white rounded-2xl shadow-2xl p-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
               <DollarSign className="text-blue-600" size={32} />
@@ -361,18 +431,18 @@ export default function Home() {
               </div>
             )}
 
-            {/* SAVE BUTTON - HIGHLY VISIBLE */}
+            {/* SAVE BUTTON */}
             <button
               onClick={saveCalculation}
               disabled={saving}
               className="w-full mt-8 px-8 py-5 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold text-xl flex items-center justify-center gap-3 hover:from-green-600 hover:to-emerald-700 transition-all transform hover:scale-105 disabled:bg-gray-400 disabled:cursor-not-allowed shadow-2xl shadow-green-500/50"
             >
               <Save size={28} />
-              {saving ? 'Saving to Database...' : '💾 Save to Database'}
+              {saving ? 'Saving...' : '💾 Save to My Account'}
             </button>
           </div>
 
-          {/* Results Panel - IMPROVED UI */}
+          {/* Results Panel - Same as before */}
           <div className="lg:col-span-2 space-y-8">
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

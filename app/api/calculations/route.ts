@@ -1,15 +1,19 @@
-// FILE 2: app/api/calculations/route.ts
-// ==========================================
-// This is your API that saves to the database
-// Location: app/api/calculations/route.ts
 
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const session = await getServerSession();
+    
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { rows } = await sql`
       SELECT * FROM calculations 
+      WHERE user_id = ${session.user.email}
       ORDER BY created_at DESC 
       LIMIT 50
     `;
@@ -22,12 +26,18 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const session = await getServerSession();
+    
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await request.json();
     const { type, parameters, results } = body;
 
     const { rows } = await sql`
-      INSERT INTO calculations (type, parameters, results, created_at)
-      VALUES (${type}, ${JSON.stringify(parameters)}, ${JSON.stringify(results)}, NOW())
+      INSERT INTO calculations (type, parameters, results, user_id, created_at)
+      VALUES (${type}, ${JSON.stringify(parameters)}, ${JSON.stringify(results)}, ${session.user.email}, NOW())
       RETURNING *
     `;
 
