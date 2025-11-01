@@ -319,8 +319,7 @@ export default function Home() {
                     type="number"
                     value={stockInitial}
                     onChange={(e) => setStockInitial(Number(e.target.value))}
-                    className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                  />
+                    className="w-full px-4 py-3 text-lg text-gray-900 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-500 focus:border-blue-500 transition-all"                  />
                 </div>
 
                 <div>
@@ -331,7 +330,7 @@ export default function Home() {
                     type="number"
                     value={stockMonthly}
                     onChange={(e) => setStockMonthly(Number(e.target.value))}
-                    className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 text-lg text-gray-900 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   />
                 </div>
 
@@ -344,7 +343,7 @@ export default function Home() {
                     step="0.1"
                     value={stockReturn}
                     onChange={(e) => setStockReturn(Number(e.target.value))}
-                    className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 text-lg text-gray-900 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   />
                 </div>
 
@@ -356,7 +355,7 @@ export default function Home() {
                     type="number"
                     value={stockYears}
                     onChange={(e) => setStockYears(Number(e.target.value))}
-                    className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 text-lg text-gray-900 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   />
                 </div>
               </div>
@@ -370,7 +369,7 @@ export default function Home() {
                     type="number"
                     value={currentAge}
                     onChange={(e) => setCurrentAge(Number(e.target.value))}
-                    className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                    className="w-full px-4 py-3 text-lg text-gray-900 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition-all"
                   />
                 </div>
 
@@ -382,7 +381,7 @@ export default function Home() {
                     type="number"
                     value={retireInitial}
                     onChange={(e) => setRetireInitial(Number(e.target.value))}
-                    className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                    className="w-full px-4 py-3 text-lgt ext-gray-900 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition-all"
                   />
                 </div>
 
@@ -394,7 +393,7 @@ export default function Home() {
                     type="number"
                     value={retireMonthly}
                     onChange={(e) => setRetireMonthly(Number(e.target.value))}
-                    className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                    className="w-full px-4 py-3 text-lg text-gray-900 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition-all"
                   />
                 </div>
 
@@ -407,7 +406,7 @@ export default function Home() {
                     step="0.1"
                     value={retireReturn}
                     onChange={(e) => setRetireReturn(Number(e.target.value))}
-                    className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                    className="w-full px-4 py-3 text-lg text-gray-900 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition-all"
                   />
                 </div>
 
@@ -419,7 +418,7 @@ export default function Home() {
                     type="number"
                     value={retireYears}
                     onChange={(e) => setRetireYears(Number(e.target.value))}
-                    className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                    className="w-full px-4 py-3 text-lg text-gray-900 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition-all"
                   />
                 </div>
 
