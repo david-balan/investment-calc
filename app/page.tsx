@@ -381,7 +381,7 @@ export default function Home() {
                     type="number"
                     value={retireInitial}
                     onChange={(e) => setRetireInitial(Number(e.target.value))}
-                    className="w-full px-4 py-3 text-lgt ext-gray-900 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                    className="w-full px-4 py-3 text-lgt text-gray-900 border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition-all"
                   />
                 </div>
 
